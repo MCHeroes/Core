@@ -1,0 +1,7 @@
+name: MCHeroes
+version: '${version}'
+main: mcheroes.core.CorePlugin
+api-version: '1.19'
+authors:
+  - byteful
+description: The core plugin for the Minecraft Heroes event.
