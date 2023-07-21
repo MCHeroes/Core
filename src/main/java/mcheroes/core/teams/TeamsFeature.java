@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.Nullable;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.autocomplete.SuggestionProvider;
@@ -46,11 +47,7 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
 
     @Override
     public void load() {
-        config.getConfigurationSection("teams").getValues(false).forEach((id, data) -> {
-            final ConfigurationSection cs = (ConfigurationSection) data;
-
-            teams.put(id, new Team(id, cs.getString("name", id), cs.getString("chat_prefix", id), TextColor.fromHexString(cs.getString("color", "000000")), cs.getStringList("members").stream().map(UUID::fromString).collect(Collectors.toSet())));
-        });
+        reloadTeams();
 
         actionManager.register(GetTeamAction.class, this);
 
@@ -77,7 +74,7 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
                 return Collections.emptyList();
             }
 
-            final String teamId = args.get(0);
+            final String teamId = args.get(1);
             final Team team = teams.get(teamId);
             if (team == null) {
                 return Collections.emptyList();
@@ -86,6 +83,15 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
             return team.members().stream().map(x -> Bukkit.getOfflinePlayer(x).getName()).collect(Collectors.toList());
         });
         commandHandler.register(this);
+    }
+
+    private void reloadTeams() {
+        teams.clear();
+        config.getConfigurationSection("teams").getValues(false).forEach((id, data) -> {
+            final ConfigurationSection cs = (ConfigurationSection) data;
+
+            teams.put(id, new Team(id, cs.getString("name", id), cs.getString("chat_prefix", id), TextColor.fromHexString(cs.getString("color", "000000")), cs.getStringList("members").stream().map(UUID::fromString).collect(Collectors.toSet())));
+        });
     }
 
     @Override
@@ -100,6 +106,12 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
             return;
         }
 
+        final Team current = getCurrentTeam(target.getUniqueId());
+        if (current != null) {
+            current.members().remove(target.getUniqueId());
+            saveTeam(current);
+        }
+
         team.members().add(target.getUniqueId());
         saveTeam(team);
 
@@ -107,18 +119,18 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
     }
 
     @Subcommand("removeplayer")
-    public void onRemovePlayer(CommandSender sender, Team team, OfflinePlayer target) {
+    public void onRemovePlayer(CommandSender sender, Team team, TeamPlayer target) {
         if (!sender.hasPermission(Permissions.ADMIN)) {
             sender.sendMessage(Messages.NO_PERMISSION.build(locale));
             return;
         }
 
-        if (team.members().remove(target.getUniqueId())) {
+        if (team.members().remove(target.player().getUniqueId())) {
             saveTeam(team);
 
-            sender.sendMessage(Messages.REMOVED_TEAM_PLAYER.build(locale, target, team));
+            sender.sendMessage(Messages.REMOVED_TEAM_PLAYER.build(locale, target.player(), team));
         } else {
-            sender.sendMessage(Messages.PLAYER_NOT_FOUND_IN_TEAM.build(locale, target, team));
+            sender.sendMessage(Messages.PLAYER_NOT_FOUND_IN_TEAM.build(locale, target.player(), team));
         }
     }
 
@@ -144,6 +156,7 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
 
         try {
             config.load(configFile);
+            reloadTeams();
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
@@ -161,8 +174,13 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
 
     @Override
     public Team handle(GetTeamAction action) {
+        return getCurrentTeam(action.player());
+    }
+
+    @Nullable
+    private Team getCurrentTeam(UUID player) {
         for (Team team : teams.values()) {
-            if (team.isInTeam(action.player())) return team;
+            if (team.isInTeam(player)) return team;
         }
 
         return null;
