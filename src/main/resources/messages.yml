@@ -11,3 +11,4 @@ points_gui_head_name: "<i:false><gray>#{placement} <yellow>{player}"
 points_gui_head_lore:
   - "<i:false><gray>"
   - "<i:false><gray>Points: {points}"
+reload_success: "<green>Reload successful."

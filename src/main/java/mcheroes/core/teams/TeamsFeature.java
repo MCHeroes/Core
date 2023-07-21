@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Subcommand;
@@ -132,6 +133,21 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
             actionManager.run(new PointSetAction(member, 0));
         }
         sender.sendMessage(Messages.POINTS_ACTION_SUCCESS.build(locale));
+    }
+
+    @Subcommand("reload")
+    public void onReload(CommandSender sender) {
+        if (!sender.hasPermission(Permissions.ADMIN)) {
+            sender.sendMessage(Messages.NO_PERMISSION.build(locale));
+            return;
+        }
+
+        try {
+            config.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+        sender.sendMessage(Messages.RELOAD_SUCCESS.build(locale));
     }
 
     private void saveTeam(Team team) {

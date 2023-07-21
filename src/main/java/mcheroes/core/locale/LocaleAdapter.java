@@ -1,6 +1,7 @@
 package mcheroes.core.locale;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -10,14 +11,24 @@ import java.util.List;
 
 public class LocaleAdapter {
     private final YamlConfiguration config;
+    private final File configFile;
 
     public LocaleAdapter(File file, Reader def) {
         this.config = YamlConfiguration.loadConfiguration(file);
+        this.configFile = file;
         config.addDefaults(YamlConfiguration.loadConfiguration(def));
         config.options().copyDefaults(true).parseComments(true);
         try {
             config.save(file);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void reload() {
+        try {
+            config.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
     }

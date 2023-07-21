@@ -97,6 +97,7 @@ public final class CorePlugin extends JavaPlugin {
         commandHandler = BukkitCommandHandler.create(this);
         commandHandler.enableAdventure();
         commandHandler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, SuggestionProvider.of(() -> Arrays.stream(Bukkit.getOfflinePlayers()).map(OfflinePlayer::getName).collect(Collectors.toList())));
+        commandHandler.register(new CoreCommands(this));
     }
 
     private File getConfigFile(String id) {

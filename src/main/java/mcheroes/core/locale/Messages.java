@@ -7,7 +7,7 @@ import org.bukkit.OfflinePlayer;
 import java.util.List;
 
 public final class Messages {
-    public static final Args3<Team, Component, Component> CHAT_FORMAT = (locale, team, player, msg) -> locale.getArgs("chat_format", "{player}", player, "{message}", msg, "{team}", team.chatPrefix());
+    public static final Args3<Team, Component, Component> CHAT_FORMAT = (locale, team, player, msg) -> locale.getArgs("chat_format", "{player}", player, "{message}", msg, "{team}", team != null ? team.chatPrefix() : "");
 
     public static final Args0 HUB_SET_SUCCESSFULLY = (locale) -> locale.get("hub_set_successfully");
     public static final Args0 NO_PERMISSION = (locale) -> locale.get("no_permission");
@@ -19,6 +19,7 @@ public final class Messages {
     public static final Args0 POINTS_GUI_TITLE = (locale) -> locale.get("points_gui_title");
     public static final Args2<Integer, OfflinePlayer> POINTS_GUI_HEAD_NAME = (locale, placement, player) -> locale.getArgs("points_gui_head_name", "{placement}", placement, "{player}", player.getName());
     public static final SplitArgs1<Integer> POINTS_GUI_HEAD_LORE = (locale, points) -> locale.getSplitArgs("points_gui_head_lore", "{points}", points);
+    public static final Args0 RELOAD_SUCCESS = (locale) -> locale.get("reload_success");
 
     public interface Args0 {
         Component build(LocaleAdapter locale);
