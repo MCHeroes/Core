@@ -1,8 +1,10 @@
 package mcheroes.core.teams;
 
+import mcheroes.core.action.ActionManager;
 import mcheroes.core.api.feature.CoreFeature;
 import mcheroes.core.locale.LocaleAdapter;
 import mcheroes.core.locale.Messages;
+import mcheroes.core.points.actions.PointSetAction;
 import mcheroes.core.utils.Permissions;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
@@ -28,12 +30,14 @@ public class TeamsFeature implements CoreFeature {
     private final YamlConfiguration config;
     private final BukkitCommandHandler commandHandler;
     private final LocaleAdapter locale;
+    private final ActionManager actionManager;
 
-    public TeamsFeature(File configFile, BukkitCommandHandler commandHandler, LocaleAdapter locale) {
+    public TeamsFeature(File configFile, BukkitCommandHandler commandHandler, LocaleAdapter locale, ActionManager actionManager) {
         this.configFile = configFile;
         this.config = YamlConfiguration.loadConfiguration(configFile);
         this.commandHandler = commandHandler;
         this.locale = locale;
+        this.actionManager = actionManager;
     }
 
     @Override
@@ -109,6 +113,19 @@ public class TeamsFeature implements CoreFeature {
         } else {
             sender.sendMessage(Messages.PLAYER_NOT_FOUND_IN_TEAM.build(locale, target, team));
         }
+    }
+
+    @Subcommand("resetpoints")
+    public void onResetPoints(CommandSender sender, Team team) {
+        if (!sender.hasPermission(Permissions.ADMIN)) {
+            sender.sendMessage(Messages.NO_PERMISSION.build(locale));
+            return;
+        }
+
+        for (UUID member : team.members()) {
+            actionManager.run(new PointSetAction(member, 0));
+        }
+        sender.sendMessage(Messages.POINTS_ACTION_SUCCESS.build(locale));
     }
 
     private void saveTeam(Team team) {

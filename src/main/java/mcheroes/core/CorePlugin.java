@@ -116,10 +116,10 @@ public final class CorePlugin extends JavaPlugin {
 
     private void initializeFeatures() {
         // No guaranteed load order. Do not attempt to communicate data between features or depend on another feature! Features need to be as separated as possible.
-        loadedFeatures.add(new PointsFeature(actionManager, dataStore, scheduler));
+        loadedFeatures.add(new PointsFeature(actionManager, dataStore, scheduler, commandHandler, locale));
         loadedFeatures.add(new ChatFeature(locale));
         loadedFeatures.add(new HubFeature(commandHandler, dataStore, locale));
-        loadedFeatures.add(new TeamsFeature(getConfigFile("teams"), commandHandler, locale));
+        loadedFeatures.add(new TeamsFeature(getConfigFile("teams"), commandHandler, locale, actionManager));
 
         for (CoreFeature feature : loadedFeatures) {
             if (feature instanceof Listener listener) getServer().getPluginManager().registerEvents(listener, this);

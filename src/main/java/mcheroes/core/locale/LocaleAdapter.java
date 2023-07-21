@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 
 public class LocaleAdapter {
     private final YamlConfiguration config;
@@ -27,5 +28,13 @@ public class LocaleAdapter {
 
     public Component getArgs(String key, Object... args) {
         return LocaleParser.parse(config.getString(key, "MessageNotFound:" + key), args);
+    }
+
+    public List<Component> getSplit(String key) {
+        return LocaleParser.parse(config.getStringList(key));
+    }
+
+    public List<Component> getSplitArgs(String key, Object... args) {
+        return LocaleParser.parse(config.getStringList(key), args);
     }
 }

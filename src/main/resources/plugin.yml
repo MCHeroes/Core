@@ -5,3 +5,5 @@ api-version: '1.19'
 authors:
   - byteful
 description: The core plugin for the Minecraft Heroes event.
+depend:
+  - RedLib
