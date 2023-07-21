@@ -1,10 +1,12 @@
 package mcheroes.core.teams;
 
 import mcheroes.core.action.ActionManager;
+import mcheroes.core.api.action.ActionHandler;
 import mcheroes.core.api.feature.CoreFeature;
 import mcheroes.core.locale.LocaleAdapter;
 import mcheroes.core.locale.Messages;
 import mcheroes.core.points.actions.PointSetAction;
+import mcheroes.core.teams.actions.GetTeamAction;
 import mcheroes.core.utils.Permissions;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
@@ -25,7 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Command("teams")
-public class TeamsFeature implements CoreFeature {
+public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, Team> {
     private final Map<String, Team> teams = new HashMap<>();
     private final File configFile;
     private final YamlConfiguration config;
@@ -48,6 +50,8 @@ public class TeamsFeature implements CoreFeature {
 
             teams.put(id, new Team(id, cs.getString("name", id), cs.getString("chat_prefix", id), TextColor.fromHexString(cs.getString("color", "000000")), cs.getStringList("members").stream().map(UUID::fromString).collect(Collectors.toSet())));
         });
+
+        actionManager.register(GetTeamAction.class, );
 
         commandHandler.registerValueResolver(Team.class, context -> {
             final String id = context.pop();
@@ -137,5 +141,14 @@ public class TeamsFeature implements CoreFeature {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Team handle(GetTeamAction action) {
+        for (Team team : teams.values()) {
+            if (team.isInTeam(action.player())) return team;
+        }
+
+        return null;
     }
 }

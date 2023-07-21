@@ -7,7 +7,7 @@ import org.bukkit.OfflinePlayer;
 import java.util.List;
 
 public final class Messages {
-    public static final Args2<Component, Component> CHAT_FORMAT = (locale, component, component2) -> locale.getArgs("chat_format", "{player}", component, "{message}", component2);
+    public static final Args3<Team, Component, Component> CHAT_FORMAT = (locale, team, player, msg) -> locale.getArgs("chat_format", "{player}", player, "{message}", msg, "{team}", team.chatPrefix());
 
     public static final Args0 HUB_SET_SUCCESSFULLY = (locale) -> locale.get("hub_set_successfully");
     public static final Args0 NO_PERMISSION = (locale) -> locale.get("no_permission");
@@ -30,6 +30,10 @@ public final class Messages {
 
     public interface Args2<A, B> {
         Component build(LocaleAdapter locale, A a, B b);
+    }
+
+    public interface Args3<A, B, C> {
+        Component build(LocaleAdapter locale, A a, B b, C c);
     }
 
     public interface SplitArgs1<A> {
