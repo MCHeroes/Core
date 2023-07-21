@@ -4,7 +4,7 @@ import mcheroes.core.api.data.DataStore;
 import mcheroes.core.api.feature.CoreFeature;
 import mcheroes.core.locale.LocaleAdapter;
 import mcheroes.core.locale.Messages;
-import mcheroes.core.permission.Permissions;
+import mcheroes.core.utils.Permissions;
 import mcheroes.core.utils.Position;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;

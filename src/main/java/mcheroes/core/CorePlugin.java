@@ -1,5 +1,6 @@
 package mcheroes.core;
 
+import mcheroes.core.action.ActionManager;
 import mcheroes.core.api.data.DataStore;
 import mcheroes.core.api.data.impl.JSONDataStore;
 import mcheroes.core.api.feature.CoreFeature;
@@ -19,6 +20,7 @@ import java.util.Set;
 
 public final class CorePlugin extends JavaPlugin {
     private final Set<CoreFeature> loadedFeatures = new HashSet<>();
+    private final ActionManager actionManager = new ActionManager();
 
     private BukkitCommandHandler commandHandler;
     private LocaleAdapter locale;
@@ -63,6 +65,18 @@ public final class CorePlugin extends JavaPlugin {
         return dataStore;
     }
 
+    public ActionManager getActionManager() {
+        return actionManager;
+    }
+
+    public BukkitCommandHandler getCommandHandler() {
+        return commandHandler;
+    }
+
+    public Set<CoreFeature> getLoadedFeatures() {
+        return loadedFeatures;
+    }
+
     private void setupDataStore() {
         dataStore = new JSONDataStore(getDataFolder().toPath().resolve("data.json"));
         dataStore.load();
@@ -85,7 +99,8 @@ public final class CorePlugin extends JavaPlugin {
     }
 
     private void initializeFeatures() {
-        loadedFeatures.add(new PointsFeature());
+        // No guaranteed load order. Do not attempt to communicate data between features or depend on another feature! Features need to be as separated as possible.
+        loadedFeatures.add(new PointsFeature(actionManager));
         loadedFeatures.add(new ChatFeature(locale));
         loadedFeatures.add(new HubFeature(commandHandler, dataStore, locale));
 

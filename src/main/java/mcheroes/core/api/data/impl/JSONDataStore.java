@@ -3,15 +3,21 @@ package mcheroes.core.api.data.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import mcheroes.core.api.data.DataStore;
 import mcheroes.core.utils.Position;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class JSONDataStore implements DataStore {
     private static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+    private static final TypeToken<Map<UUID, Integer>> POINTS_TYPE_TOKEN = new TypeToken<>() {
+    };
 
     private final Path path;
     private JsonObject json;
@@ -32,6 +38,25 @@ public class JSONDataStore implements DataStore {
     @Override
     public void setHubSpawn(Position hubSpawn) {
         json.add("hub", GSON.toJsonTree(hubSpawn));
+    }
+
+    @Override
+    public int getPlayerPoints(UUID uuid) {
+        if (!json.has("players")) {
+            return 0;
+        }
+        final Map<UUID, Integer> map = GSON.fromJson(json.get("players"), POINTS_TYPE_TOKEN);
+        if (map == null || !map.containsKey(uuid)) return 0;
+
+        return map.get(uuid);
+    }
+
+    @Override
+    public void setPlayerPoints(UUID uuid, int points) {
+        final Map<UUID, Integer> map = !json.has("players") ? new HashMap<>() : GSON.fromJson(json.get("players"), POINTS_TYPE_TOKEN);
+        map.put(uuid, points);
+
+        json.add("players", GSON.toJsonTree(map));
     }
 
     @Override
