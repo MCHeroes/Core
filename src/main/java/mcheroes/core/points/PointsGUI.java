@@ -23,7 +23,7 @@ public class PointsGUI extends PaginationPanel {
 
         this.pointMap = pointMap;
         this.locale = locale;
-        addSlots(9, 55);
+        addSlots(9, 54);
     }
 
     public void updatePoints() {

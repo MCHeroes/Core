@@ -7,3 +7,6 @@ authors:
 description: The core plugin for the Minecraft Heroes event.
 depend:
   - RedLib
+softdepend:
+  - Multiverse-Core
+  - WorldGuard

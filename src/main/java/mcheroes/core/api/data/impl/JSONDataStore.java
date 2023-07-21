@@ -11,9 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class JSONDataStore implements DataStore {
     private static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
@@ -58,6 +56,13 @@ public class JSONDataStore implements DataStore {
         map.put(uuid, points);
 
         json.add("players", GSON.toJsonTree(map));
+    }
+
+    @Override
+    public Set<UUID> getPlayers() {
+        if (!json.has("players")) return Collections.emptySet();
+
+        return new HashSet<>(GSON.fromJson(json.get("players"), POINTS_TYPE_TOKEN).keySet());
     }
 
     @Override

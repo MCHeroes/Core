@@ -124,7 +124,11 @@ public final class CorePlugin extends JavaPlugin {
         for (CoreFeature feature : loadedFeatures) {
             if (feature instanceof Listener listener) getServer().getPluginManager().registerEvents(listener, this);
 
-            feature.load();
+            try {
+                feature.load();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

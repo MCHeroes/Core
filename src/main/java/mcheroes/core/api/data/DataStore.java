@@ -4,6 +4,7 @@ import mcheroes.core.utils.Position;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
+import java.util.Set;
 import java.util.UUID;
 
 public interface DataStore extends Closeable {
@@ -14,6 +15,8 @@ public interface DataStore extends Closeable {
     int getPlayerPoints(@NotNull UUID uuid);
 
     void setPlayerPoints(@NotNull UUID uuid, int points);
+
+    Set<UUID> getPlayers();
 
     void load();
 

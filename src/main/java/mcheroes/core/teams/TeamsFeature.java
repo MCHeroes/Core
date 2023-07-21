@@ -14,6 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 import revxrsal.commands.bukkit.exception.InvalidPlayerException;
 import revxrsal.commands.exception.MissingArgumentException;
@@ -65,6 +66,7 @@ public class TeamsFeature implements CoreFeature {
 
             return new TeamPlayer(found);
         });
+        commandHandler.getAutoCompleter().registerParameterSuggestions(Team.class, SuggestionProvider.of(teams::keySet));
         commandHandler.getAutoCompleter().registerParameterSuggestions(TeamPlayer.class, (args, sender, command) -> {
             if (args.size() == 0) {
                 return Collections.emptyList();

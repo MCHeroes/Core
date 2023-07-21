@@ -10,7 +10,6 @@ import mcheroes.core.locale.Messages;
 import mcheroes.core.points.actions.PointSetAction;
 import mcheroes.core.utils.Permissions;
 import mcheroes.core.utils.Scheduler;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
@@ -30,11 +29,13 @@ public class PointsFeature implements CoreFeature, Listener, ActionHandler<Point
     private final BukkitCommandHandler commandHandler;
     private final LocaleAdapter locale;
     private final PointsGUI gui;
+    private final DataStore dataStore;
 
     public PointsFeature(ActionManager actionManager, DataStore dataStore, Scheduler scheduler, BukkitCommandHandler commandHandler, LocaleAdapter locale) {
         this.actionManager = actionManager;
         this.commandHandler = commandHandler;
         this.locale = locale;
+        this.dataStore = dataStore;
         this.cache = new HashCache<>() {
             @Override
             public Integer load(UUID uuid) {
@@ -54,8 +55,8 @@ public class PointsFeature implements CoreFeature, Listener, ActionHandler<Point
         actionManager.register(PointSetAction.class, this);
         commandHandler.register(this);
 
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            cache.load(player.getUniqueId());
+        for (UUID player : dataStore.getPlayers()) {
+            cache.load(player);
         }
 
         gui.updatePoints();
@@ -126,8 +127,8 @@ public class PointsFeature implements CoreFeature, Listener, ActionHandler<Point
     public void onResetAll(CommandSender sender) {
         if (checkAdmin(sender)) return;
 
-        for (OfflinePlayer target : Bukkit.getOfflinePlayers()) {
-            actionManager.run(new PointSetAction(target.getUniqueId(), 0));
+        for (UUID target : dataStore.getPlayers()) {
+            actionManager.run(new PointSetAction(target, 0));
         }
         sender.sendMessage(Messages.POINTS_ACTION_SUCCESS.build(locale));
     }

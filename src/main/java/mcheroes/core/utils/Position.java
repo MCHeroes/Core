@@ -2,6 +2,7 @@ package mcheroes.core.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public final class Position {
     private final String world;
@@ -34,7 +35,10 @@ public final class Position {
     }
 
     public Location toBukkit() {
-        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+        final World found = Bukkit.getWorld(world);
+        if (found == null) throw new RuntimeException("Failed to find world: " + world);
+
+        return new Location(found, x, y, z, yaw, pitch);
     }
 
     public String getWorld() {
