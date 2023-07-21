@@ -2,24 +2,20 @@ teams:
   red:
     name: "Red Rhinos"
     color: "#FF0000"
-    chat_prefix: ""
-    members:
-      - dfc1d5fe-106e-47b2-93b0-f2a9b0dc1f86
+    chat_prefix: "<red><bold>RED </bold></red>"
+    members: [ ]
   yellow:
     name: "Yellow Bees"
     color: "#FFFF00"
-    chat_prefix: ""
-    members:
-      - 069a79f4-44e9-4726-a5be-fca90e38aaf5
+    chat_prefix: "<yellow><bold>YELLOW </bold></yellow>"
+    members: [ ]
   green:
     name: "Green Goats"
     color: "#008000"
-    chat_prefix: ""
-    members:
-      - d9ba9e12-2629-4da0-96cc-54cd50c46ee6
+    chat_prefix: "<green><bold>GREEN </bold></green>"
+    members: [ ]
   blue:
     name: "Blue Dolphins"
     color: "#000080"
-    chat_prefix: ""
-    members:
-      - 709ba151-538b-41bd-879a-f94d3dc5ebf1
+    chat_prefix: "<blue><bold>BLUE </bold></blue>"
+    members: [ ]
