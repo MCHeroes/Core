@@ -51,7 +51,7 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
             teams.put(id, new Team(id, cs.getString("name", id), cs.getString("chat_prefix", id), TextColor.fromHexString(cs.getString("color", "000000")), cs.getStringList("members").stream().map(UUID::fromString).collect(Collectors.toSet())));
         });
 
-        actionManager.register(GetTeamAction.class, );
+        actionManager.register(GetTeamAction.class, this);
 
         commandHandler.registerValueResolver(Team.class, context -> {
             final String id = context.pop();
