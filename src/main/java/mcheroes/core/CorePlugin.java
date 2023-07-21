@@ -8,15 +8,21 @@ import mcheroes.core.chat.ChatFeature;
 import mcheroes.core.hub.HubFeature;
 import mcheroes.core.locale.LocaleAdapter;
 import mcheroes.core.points.PointsFeature;
+import mcheroes.core.teams.TeamsFeature;
+import mcheroes.core.utils.Scheduler;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class CorePlugin extends JavaPlugin {
     private final Set<CoreFeature> loadedFeatures = new HashSet<>();
@@ -25,6 +31,7 @@ public final class CorePlugin extends JavaPlugin {
     private BukkitCommandHandler commandHandler;
     private LocaleAdapter locale;
     private DataStore dataStore;
+    private Scheduler scheduler;
 
     @Override
     public void onEnable() {
@@ -32,6 +39,8 @@ public final class CorePlugin extends JavaPlugin {
         setupLocale();
         setupDataStore();
         setupCommands();
+
+        scheduler = new Scheduler(this);
 
         getLogger().info("Initializing core features...");
         initializeFeatures();
@@ -87,22 +96,30 @@ public final class CorePlugin extends JavaPlugin {
     private void setupCommands() {
         commandHandler = BukkitCommandHandler.create(this);
         commandHandler.enableAdventure();
+        commandHandler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, SuggestionProvider.of(() -> Arrays.stream(Bukkit.getOfflinePlayers()).map(OfflinePlayer::getName).collect(Collectors.toList())));
+    }
+
+    private File getConfigFile(String id) {
+        final File file = new File(getDataFolder(), id + ".yml");
+        if (!file.exists()) {
+            saveResource(id + ".yml", true);
+        }
+
+        return file;
     }
 
     private void setupLocale() {
-        final File file = new File(getDataFolder(), "messages.yml");
-        if (!file.exists()) {
-            saveResource("messages.yml", true);
-        }
+        final File file = getConfigFile("messages");
 
         locale = new LocaleAdapter(file, getTextResource("messages.yml"));
     }
 
     private void initializeFeatures() {
         // No guaranteed load order. Do not attempt to communicate data between features or depend on another feature! Features need to be as separated as possible.
-        loadedFeatures.add(new PointsFeature(actionManager));
+        loadedFeatures.add(new PointsFeature(actionManager, dataStore, scheduler));
         loadedFeatures.add(new ChatFeature(locale));
         loadedFeatures.add(new HubFeature(commandHandler, dataStore, locale));
+        loadedFeatures.add(new TeamsFeature(getConfigFile("teams"), commandHandler, locale));
 
         for (CoreFeature feature : loadedFeatures) {
             if (feature instanceof Listener listener) getServer().getPluginManager().registerEvents(listener, this);

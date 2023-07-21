@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import mcheroes.core.api.data.DataStore;
 import mcheroes.core.utils.Position;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,7 +28,7 @@ public class JSONDataStore implements DataStore {
     }
 
     @Override
-    public Position getHubSpawn() {
+    public @NotNull Position getHubSpawn() {
         if (!json.has("hub")) {
             json.add("hub", GSON.toJsonTree(Position.zero("Hub")));
         }
@@ -36,12 +37,12 @@ public class JSONDataStore implements DataStore {
     }
 
     @Override
-    public void setHubSpawn(Position hubSpawn) {
+    public void setHubSpawn(@NotNull Position hubSpawn) {
         json.add("hub", GSON.toJsonTree(hubSpawn));
     }
 
     @Override
-    public int getPlayerPoints(UUID uuid) {
+    public int getPlayerPoints(@NotNull UUID uuid) {
         if (!json.has("players")) {
             return 0;
         }
@@ -52,7 +53,7 @@ public class JSONDataStore implements DataStore {
     }
 
     @Override
-    public void setPlayerPoints(UUID uuid, int points) {
+    public void setPlayerPoints(@NotNull UUID uuid, int points) {
         final Map<UUID, Integer> map = !json.has("players") ? new HashMap<>() : GSON.fromJson(json.get("players"), POINTS_TYPE_TOKEN);
         map.put(uuid, points);
 

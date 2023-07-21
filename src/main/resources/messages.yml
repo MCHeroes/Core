@@ -1,3 +1,6 @@
 chat_format: "{player} <gray>» <white>{message}"
 hub_set_successfully: "<green>Hub spawn set successfully!"
 no_permission: "<red>You do not have permission to execute this command!"
+added_team_player: "<green>Successfully added {player} to team {team}."
+removed_team_player: "<red>Successfully removed {player} from team {team}."
+player_not_found_in_team: "<red>{player} was not found in team {team}!"

@@ -2,6 +2,8 @@ package mcheroes.core.action;
 
 import mcheroes.core.api.action.Action;
 import mcheroes.core.api.action.ActionHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,11 +14,15 @@ import java.util.Map;
 public class ActionManager {
     private final Map<Class<? extends Action>, ActionHandler<Action, ?>> handlers = new HashMap<>();
 
-    public <R> R run(Action action) {
-        return (R) handlers.get(action.getClass()).handle(action);
+    @Nullable
+    public <R> R run(@NotNull Action action) {
+        final ActionHandler<Action, ?> handler = handlers.get(action.getClass());
+        if (handler == null) return null;
+
+        return (R) handler.handle(action);
     }
 
-    public <T extends Action, R> void register(Class<T> type, ActionHandler<T, R> handler) {
+    public <T extends Action, R> void register(@NotNull Class<T> type, @NotNull ActionHandler<T, R> handler) {
         handlers.put(type, (ActionHandler<Action, ?>) handler);
     }
 }

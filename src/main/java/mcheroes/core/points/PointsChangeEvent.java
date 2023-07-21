@@ -1,6 +1,6 @@
 package mcheroes.core.points;
 
-import mcheroes.core.utils.CoreEvent;
+import mcheroes.core.api.CoreEvent;
 import org.bukkit.event.Cancellable;
 
 import java.util.UUID;
