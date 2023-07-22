@@ -21,7 +21,7 @@ public abstract class HashCache<K, V> extends HashMap<K, V> {
 
     @Override
     public V get(Object key) {
-        if (containsKey(key)) return get(key);
+        if (containsKey(key)) return super.get(key);
 
         final V loaded = load((K) key);
         super.put((K) key, loaded);
