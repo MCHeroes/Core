@@ -42,10 +42,14 @@ public class JSONDataStore implements DataStore {
     @Override
     public int getPlayerPoints(@NotNull UUID uuid) {
         if (!json.has("players")) {
+            setPlayerPoints(uuid, 0);
             return 0;
         }
         final Map<UUID, Integer> map = GSON.fromJson(json.get("players"), POINTS_TYPE_TOKEN);
-        if (map == null || !map.containsKey(uuid)) return 0;
+        if (map == null || !map.containsKey(uuid)) {
+            setPlayerPoints(uuid, 0);
+            return 0;
+        }
 
         return map.get(uuid);
     }
