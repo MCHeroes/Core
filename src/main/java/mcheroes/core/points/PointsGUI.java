@@ -30,6 +30,7 @@ public class PointsGUI extends PaginationPanel {
     }
 
     public void open(Player player) {
+        updatePoints();
         gui.open(player);
     }
 
