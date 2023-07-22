@@ -6,7 +6,7 @@ import mcheroes.core.teams.Team;
 import mcheroes.core.teams.actions.GetTeamAction;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,15 +57,15 @@ public class CorePlaceholders extends PlaceholderExpansion {
             }
             case "team" -> {
                 final Team team = actionManager.run(new GetTeamAction(player.getUniqueId()));
-                if (team == null) yield null;
+                if (team == null) yield "";
 
                 yield team.name();
             }
             case "team_color" -> {
                 final Team team = actionManager.run(new GetTeamAction(player.getUniqueId()));
-                if (team == null) yield null;
+                if (team == null) yield "";
 
-                yield LegacyComponentSerializer.legacySection().serialize(Component.empty().color(team.color()));
+                yield MiniMessage.miniMessage().serialize(Component.text("", team.color()));
             }
             default -> null;
         };
