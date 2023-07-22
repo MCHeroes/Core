@@ -50,7 +50,7 @@ public class CorePlaceholders extends PlaceholderExpansion {
 
         return switch (params) {
             case "points" -> {
-                final Long points = actionManager.run(new GetPointsAction(player.getUniqueId()));
+                final Integer points = actionManager.run(new GetPointsAction(player.getUniqueId()));
                 if (points == null) yield null;
 
                 yield FormatUtils.formatLargeInteger(points);
