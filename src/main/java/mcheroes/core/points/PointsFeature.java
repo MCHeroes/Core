@@ -12,13 +12,17 @@ import mcheroes.core.points.actions.handlers.GetPointsActionHandler;
 import mcheroes.core.points.actions.handlers.SetPointsActionHandler;
 import mcheroes.core.utils.Permissions;
 import mcheroes.core.utils.Scheduler;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import redempt.redlib.inventorygui.InventoryGUI;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.DefaultFor;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
@@ -30,7 +34,6 @@ public class PointsFeature implements CoreFeature, Listener {
     private final HashCache<UUID, Integer> cache;
     private final BukkitCommandHandler commandHandler;
     private final LocaleAdapter locale;
-    private final PointsGUI gui;
     private final DataStore dataStore;
 
     public PointsFeature(ActionManager actionManager, DataStore dataStore, Scheduler scheduler, BukkitCommandHandler commandHandler, LocaleAdapter locale) {
@@ -49,12 +52,11 @@ public class PointsFeature implements CoreFeature, Listener {
                 scheduler.runAsync(() -> dataStore.setPlayerPoints(uuid, points));
             }
         };
-        this.gui = new PointsGUI(locale, cache);
     }
 
     @Override
     public void load() {
-        actionManager.register(SetPointsAction.class, new SetPointsActionHandler(cache, gui));
+        actionManager.register(SetPointsAction.class, new SetPointsActionHandler(cache));
         actionManager.register(GetPointsAction.class, new GetPointsActionHandler(cache));
 
         commandHandler.register(this);
@@ -62,8 +64,6 @@ public class PointsFeature implements CoreFeature, Listener {
         for (UUID player : dataStore.getPlayers()) {
             cache.load(player);
         }
-
-        gui.updatePoints();
     }
 
     @Override
@@ -82,6 +82,12 @@ public class PointsFeature implements CoreFeature, Listener {
         if (!cache.containsKey(uuid)) return;
 
         cache.save(uuid, cache.get(uuid));
+    }
+
+    @Subcommand({"gui", "leaderboard"})
+    @DefaultFor("points")
+    public void onGui(Player sender) {
+        new PointsGUI(new InventoryGUI(Bukkit.createInventory(null, 54, Messages.POINTS_GUI_TITLE.build(locale))), locale, cache).open(sender);
     }
 
     @Subcommand("set")

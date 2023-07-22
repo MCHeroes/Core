@@ -4,6 +4,7 @@ import mcheroes.core.locale.LocaleAdapter;
 import mcheroes.core.locale.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import redempt.redlib.inventorygui.InventoryGUI;
@@ -17,13 +18,19 @@ import java.util.UUID;
 public class PointsGUI extends PaginationPanel {
     private final Map<UUID, Integer> pointMap;
     private final LocaleAdapter locale;
+    private final InventoryGUI gui;
 
-    public PointsGUI(LocaleAdapter locale, Map<UUID, Integer> pointMap) {
-        super(new InventoryGUI(Bukkit.createInventory(null, 54, Messages.POINTS_GUI_TITLE.build(locale))));
+    public PointsGUI(InventoryGUI gui, LocaleAdapter locale, Map<UUID, Integer> pointMap) {
+        super(gui);
 
+        this.gui = gui;
         this.pointMap = pointMap;
         this.locale = locale;
         addSlots(9, 54);
+    }
+
+    public void open(Player player) {
+        gui.open(player);
     }
 
     public void updatePoints() {
