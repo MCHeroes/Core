@@ -8,5 +8,5 @@ description: The core plugin for the Minecraft Heroes event.
 depend:
   - RedLib
 softdepend:
-  - Multiverse-Core
-  - WorldGuard
+  - Multiverse-Core # Added as softdepend to fix load order for worlds.
+  - PlaceholderAPI

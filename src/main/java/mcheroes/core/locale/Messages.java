@@ -3,11 +3,12 @@ package mcheroes.core.locale;
 import mcheroes.core.teams.Team;
 import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public final class Messages {
-    public static final Args3<Team, Component, Component> CHAT_FORMAT = (locale, team, player, msg) -> locale.getArgs("chat_format", "{player}", player, "{message}", msg, "{team}", team != null ? team.chatPrefix() : "");
+    public static final Args3<Team, Player, Component> CHAT_FORMAT = (locale, team, player, msg) -> locale.getArgs(player, "chat_format", "{player}", player.displayName(), "{message}", msg, "{team}", team != null ? team.chatPrefix() : "");
 
     public static final Args0 HUB_SET_SUCCESSFULLY = (locale) -> locale.get("hub_set_successfully");
     public static final Args0 NO_PERMISSION = (locale) -> locale.get("no_permission");

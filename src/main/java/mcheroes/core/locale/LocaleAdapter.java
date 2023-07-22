@@ -3,6 +3,8 @@ package mcheroes.core.locale;
 import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,19 +35,35 @@ public class LocaleAdapter {
         }
     }
 
+    public Component get(@Nullable Player reference, String key) {
+        return LocaleParser.parse(reference, config.getString(key, "MessageNotFound:" + key));
+    }
+
+    public Component getArgs(@Nullable Player reference, String key, Object... args) {
+        return LocaleParser.parse(reference, config.getString(key, "MessageNotFound:" + key), args);
+    }
+
+    public List<Component> getSplit(@Nullable Player reference, String key) {
+        return LocaleParser.parse(reference, config.getStringList(key));
+    }
+
+    public List<Component> getSplitArgs(@Nullable Player reference, String key, Object... args) {
+        return LocaleParser.parse(reference, config.getStringList(key), args);
+    }
+
     public Component get(String key) {
-        return LocaleParser.parse(config.getString(key, "MessageNotFound:" + key));
+        return get(null, key);
     }
 
     public Component getArgs(String key, Object... args) {
-        return LocaleParser.parse(config.getString(key, "MessageNotFound:" + key), args);
+        return getArgs(null, key, args);
     }
 
     public List<Component> getSplit(String key) {
-        return LocaleParser.parse(config.getStringList(key));
+        return getSplit(null, key);
     }
 
     public List<Component> getSplitArgs(String key, Object... args) {
-        return LocaleParser.parse(config.getStringList(key), args);
+        return getSplitArgs(null, key, args);
     }
 }

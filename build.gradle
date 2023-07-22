@@ -25,6 +25,10 @@ repositories {
         name = "redlib"
         url = "https://redempt.dev"
     }
+    maven {
+        name = "placeholderapi"
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
@@ -34,6 +38,7 @@ dependencies {
     implementation "com.github.Revxrsal.Lamp:bukkit:3.1.5"
 
     compileOnly 'com.github.Redempt:RedLib:6.5.8'
+    compileOnly 'me.clip:placeholderapi:2.11.3'
 }
 
 def targetJavaVersion = 17

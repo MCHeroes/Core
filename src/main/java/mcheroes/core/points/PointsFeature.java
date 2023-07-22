@@ -2,12 +2,14 @@ package mcheroes.core.points;
 
 import mcheroes.core.action.ActionManager;
 import mcheroes.core.api.HashCache;
-import mcheroes.core.api.action.ActionHandler;
 import mcheroes.core.api.data.DataStore;
 import mcheroes.core.api.feature.CoreFeature;
 import mcheroes.core.locale.LocaleAdapter;
 import mcheroes.core.locale.Messages;
-import mcheroes.core.points.actions.PointSetAction;
+import mcheroes.core.points.actions.GetPointsAction;
+import mcheroes.core.points.actions.SetPointsAction;
+import mcheroes.core.points.actions.handlers.GetPointsActionHandler;
+import mcheroes.core.points.actions.handlers.SetPointsActionHandler;
 import mcheroes.core.utils.Permissions;
 import mcheroes.core.utils.Scheduler;
 import org.bukkit.OfflinePlayer;
@@ -23,7 +25,7 @@ import revxrsal.commands.bukkit.BukkitCommandHandler;
 import java.util.UUID;
 
 @Command("points")
-public class PointsFeature implements CoreFeature, Listener, ActionHandler<PointSetAction, Integer> {
+public class PointsFeature implements CoreFeature, Listener {
     private final ActionManager actionManager;
     private final HashCache<UUID, Integer> cache;
     private final BukkitCommandHandler commandHandler;
@@ -52,7 +54,9 @@ public class PointsFeature implements CoreFeature, Listener, ActionHandler<Point
 
     @Override
     public void load() {
-        actionManager.register(PointSetAction.class, this);
+        actionManager.register(SetPointsAction.class, new SetPointsActionHandler(cache, gui));
+        actionManager.register(GetPointsAction.class, new GetPointsActionHandler(cache));
+
         commandHandler.register(this);
 
         for (UUID player : dataStore.getPlayers()) {
@@ -65,20 +69,6 @@ public class PointsFeature implements CoreFeature, Listener, ActionHandler<Point
     @Override
     public void unload() {
 
-    }
-
-    @Override
-    public Integer handle(PointSetAction action) {
-        final Integer old = cache.get(action.player());
-        final PointsChangeEvent event = new PointsChangeEvent(action.player(), old, action.to());
-        if (event.call()) {
-            return old;
-        }
-
-        cache.put(action.player(), event.getNewPoints());
-        gui.updatePoints();
-
-        return old;
     }
 
     @EventHandler
@@ -98,7 +88,7 @@ public class PointsFeature implements CoreFeature, Listener, ActionHandler<Point
     public void onSet(CommandSender sender, OfflinePlayer target, int set) {
         if (checkAdmin(sender)) return;
 
-        actionManager.run(new PointSetAction(target.getUniqueId(), set));
+        actionManager.run(new SetPointsAction(target.getUniqueId(), set));
         sender.sendMessage(Messages.POINTS_ACTION_SUCCESS.build(locale));
     }
 
@@ -106,7 +96,7 @@ public class PointsFeature implements CoreFeature, Listener, ActionHandler<Point
     public void onAdd(CommandSender sender, OfflinePlayer target, int add) {
         if (checkAdmin(sender)) return;
 
-        actionManager.run(new PointSetAction(target.getUniqueId(), cache.get(target.getUniqueId()) + add));
+        actionManager.run(new SetPointsAction(target.getUniqueId(), cache.get(target.getUniqueId()) + add));
         sender.sendMessage(Messages.POINTS_ACTION_SUCCESS.build(locale));
     }
 
@@ -114,7 +104,7 @@ public class PointsFeature implements CoreFeature, Listener, ActionHandler<Point
     public void onRemove(CommandSender sender, OfflinePlayer target, int remove) {
         if (checkAdmin(sender)) return;
 
-        actionManager.run(new PointSetAction(target.getUniqueId(), cache.get(target.getUniqueId()) - remove));
+        actionManager.run(new SetPointsAction(target.getUniqueId(), cache.get(target.getUniqueId()) - remove));
         sender.sendMessage(Messages.POINTS_ACTION_SUCCESS.build(locale));
     }
 
@@ -128,7 +118,7 @@ public class PointsFeature implements CoreFeature, Listener, ActionHandler<Point
         if (checkAdmin(sender)) return;
 
         for (UUID target : dataStore.getPlayers()) {
-            actionManager.run(new PointSetAction(target, 0));
+            actionManager.run(new SetPointsAction(target, 0));
         }
         sender.sendMessage(Messages.POINTS_ACTION_SUCCESS.build(locale));
     }

@@ -5,7 +5,7 @@ import mcheroes.core.api.action.ActionHandler;
 import mcheroes.core.api.feature.CoreFeature;
 import mcheroes.core.locale.LocaleAdapter;
 import mcheroes.core.locale.Messages;
-import mcheroes.core.points.actions.PointSetAction;
+import mcheroes.core.points.actions.SetPointsAction;
 import mcheroes.core.teams.actions.GetTeamAction;
 import mcheroes.core.utils.Permissions;
 import net.kyori.adventure.text.format.TextColor;
@@ -142,7 +142,7 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
         }
 
         for (UUID member : team.members()) {
-            actionManager.run(new PointSetAction(member, 0));
+            actionManager.run(new SetPointsAction(member, 0));
         }
         sender.sendMessage(Messages.POINTS_ACTION_SUCCESS.build(locale));
     }

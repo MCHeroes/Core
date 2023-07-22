@@ -47,6 +47,10 @@ public final class CorePlugin extends JavaPlugin {
 
         commandHandler.registerBrigadier();
 
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new CorePlaceholders(actionManager).register();
+        }
+
         getLogger().info("MCHeroes event core is ready to go!");
     }
 
