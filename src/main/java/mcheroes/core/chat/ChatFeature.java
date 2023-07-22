@@ -37,9 +37,8 @@ public class ChatFeature implements CoreFeature, Listener {
         event.setCancelled(true);
 
         final Component message = event.message();
-        final Component name = event.getPlayer().displayName();
         final Team team = actionManager.run(new GetTeamAction(event.getPlayer().getUniqueId()));
 
-        Bukkit.broadcast(Messages.CHAT_FORMAT.build(locale, team, name, message));
+        Bukkit.broadcast(Messages.CHAT_FORMAT.build(locale, team, event.getPlayer(), message));
     }
 }
