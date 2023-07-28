@@ -61,8 +61,8 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
         });
         commandHandler.registerValueResolver(TeamPlayer.class, context -> {
             final String username = context.pop();
-            final OfflinePlayer found = Bukkit.getOfflinePlayerIfCached(username);
-            if (found == null || !found.hasPlayedBefore()) {
+            final OfflinePlayer found = Bukkit.getOfflinePlayer(username);
+            if (!found.isOnline() && !found.hasPlayedBefore()) {
                 throw new InvalidPlayerException(context.parameter(), username);
             }
 
@@ -70,11 +70,11 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
         });
         commandHandler.getAutoCompleter().registerParameterSuggestions(Team.class, SuggestionProvider.of(teams::keySet));
         commandHandler.getAutoCompleter().registerParameterSuggestions(TeamPlayer.class, (args, sender, command) -> {
-            if (args.size() == 0) {
+            if (args.isEmpty()) {
                 return Collections.emptyList();
             }
 
-            final String teamId = args.get(1);
+            final String teamId = args.get(2);
             final Team team = teams.get(teamId);
             if (team == null) {
                 return Collections.emptyList();
