@@ -48,6 +48,12 @@ public class CorePlaceholders extends PlaceholderExpansion {
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         if (player == null) return null;
 
+        Team team = null;
+        if (params.startsWith("team")) {
+            team = actionManager.run(new GetTeamAction(player.getUniqueId()));
+            if (team == null) return "";
+        }
+
         return switch (params) {
             case "points" -> {
                 final Integer points = actionManager.run(new GetPointsAction(player.getUniqueId()));
@@ -55,18 +61,9 @@ public class CorePlaceholders extends PlaceholderExpansion {
 
                 yield FormatUtils.formatLargeInteger(points);
             }
-            case "team" -> {
-                final Team team = actionManager.run(new GetTeamAction(player.getUniqueId()));
-                if (team == null) yield "";
-
-                yield team.name();
-            }
-            case "team_color" -> {
-                final Team team = actionManager.run(new GetTeamAction(player.getUniqueId()));
-                if (team == null) yield "";
-
-                yield MiniMessage.miniMessage().serialize(Component.text("", team.color()));
-            }
+            case "team" -> team.name();
+            case "team_prefix" -> team.chatPrefix();
+            case "team_color" -> MiniMessage.miniMessage().serialize(Component.text("", team.color()));
             default -> null;
         };
     }
