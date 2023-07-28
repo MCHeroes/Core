@@ -51,7 +51,7 @@ public class CorePlaceholders extends PlaceholderExpansion {
         Team team = null;
         if (params.startsWith("team")) {
             team = actionManager.run(new GetTeamAction(player.getUniqueId()));
-            if (team == null) return "";
+            if (params.startsWith("team_") && team == null) return "";
         }
 
         return switch (params) {
@@ -61,7 +61,7 @@ public class CorePlaceholders extends PlaceholderExpansion {
 
                 yield FormatUtils.formatLargeInteger(points);
             }
-            case "team" -> team.name();
+            case "team" -> team == null ? "None" : team.name();
             case "team_prefix" -> team.chatPrefix();
             case "team_color" -> MiniMessage.miniMessage().serialize(Component.text("", team.color()));
             default -> null;
