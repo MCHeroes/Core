@@ -49,7 +49,7 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
     public void load() {
         reloadTeams();
 
-        actionManager.register(GetTeamAction.class, this);
+        actionManager.set(GetTeamAction.class, this);
 
         commandHandler.registerValueResolver(Team.class, context -> {
             final String id = context.pop();

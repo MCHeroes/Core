@@ -35,12 +35,14 @@ public class PointsFeature implements CoreFeature, Listener {
     private final BukkitCommandHandler commandHandler;
     private final LocaleAdapter locale;
     private final DataStore dataStore;
+    private final Scheduler scheduler;
 
     public PointsFeature(ActionManager actionManager, DataStore dataStore, Scheduler scheduler, BukkitCommandHandler commandHandler, LocaleAdapter locale) {
         this.actionManager = actionManager;
         this.commandHandler = commandHandler;
         this.locale = locale;
         this.dataStore = dataStore;
+        this.scheduler = scheduler;
         this.cache = new HashCache<>() {
             @Override
             public Integer load(UUID uuid) {
@@ -56,13 +58,13 @@ public class PointsFeature implements CoreFeature, Listener {
 
     @Override
     public void load() {
-        actionManager.register(SetPointsAction.class, new SetPointsActionHandler(cache));
-        actionManager.register(GetPointsAction.class, new GetPointsActionHandler(cache));
+        actionManager.set(SetPointsAction.class, new SetPointsActionHandler(cache));
+        actionManager.set(GetPointsAction.class, new GetPointsActionHandler(cache));
 
         commandHandler.register(this);
 
         for (UUID player : dataStore.getPlayers()) {
-            cache.load(player);
+            scheduler.runAsync(() -> cache.load(player));
         }
     }
 
@@ -73,7 +75,7 @@ public class PointsFeature implements CoreFeature, Listener {
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
-        cache.load(event.getPlayer().getUniqueId());
+        scheduler.runAsync(() -> cache.load(event.getPlayer().getUniqueId()));
     }
 
     @EventHandler

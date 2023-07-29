@@ -22,7 +22,7 @@ public class ActionManager {
         return (R) handler.handle(action);
     }
 
-    public <T extends Action, R> void register(@NotNull Class<T> type, @NotNull ActionHandler<T, R> handler) {
+    public <T extends Action, R> void set(@NotNull Class<T> type, @NotNull ActionHandler<T, R> handler) {
         handlers.put(type, (ActionHandler<Action, ?>) handler);
     }
 }

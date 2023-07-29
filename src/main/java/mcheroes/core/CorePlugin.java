@@ -7,6 +7,7 @@ import mcheroes.core.api.feature.CoreFeature;
 import mcheroes.core.chat.ChatFeature;
 import mcheroes.core.hub.HubFeature;
 import mcheroes.core.locale.LocaleAdapter;
+import mcheroes.core.minigames.MinigameFeature;
 import mcheroes.core.points.PointsFeature;
 import mcheroes.core.teams.TeamsFeature;
 import mcheroes.core.utils.Scheduler;
@@ -125,6 +126,7 @@ public final class CorePlugin extends JavaPlugin {
         loadedFeatures.add(new ChatFeature(locale, actionManager));
         loadedFeatures.add(new HubFeature(commandHandler, dataStore, locale, scheduler));
         loadedFeatures.add(new TeamsFeature(getConfigFile("teams"), commandHandler, locale, actionManager));
+        loadedFeatures.add(new MinigameFeature(actionManager));
 
         for (CoreFeature feature : loadedFeatures) {
             if (feature instanceof Listener listener) getServer().getPluginManager().registerEvents(listener, this);
