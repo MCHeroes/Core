@@ -1,6 +1,5 @@
 package mcheroes.core.minigames;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MinigameManager {
@@ -11,7 +10,7 @@ public class MinigameManager {
         return currentMinigame;
     }
 
-    public void setCurrentMinigame(@NotNull String currentMinigame) {
+    public void setCurrentMinigame(@Nullable String currentMinigame) {
         this.currentMinigame = currentMinigame;
     }
 }

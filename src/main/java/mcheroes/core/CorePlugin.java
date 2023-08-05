@@ -126,7 +126,7 @@ public final class CorePlugin extends JavaPlugin {
         loadedFeatures.add(new ChatFeature(locale, actionManager));
         loadedFeatures.add(new HubFeature(commandHandler, dataStore, locale, scheduler));
         loadedFeatures.add(new TeamsFeature(getConfigFile("teams"), commandHandler, locale, actionManager));
-        loadedFeatures.add(new MinigameFeature(actionManager));
+        loadedFeatures.add(new MinigameFeature(actionManager, locale, commandHandler));
 
         for (CoreFeature feature : loadedFeatures) {
             if (feature instanceof Listener listener) getServer().getPluginManager().registerEvents(listener, this);

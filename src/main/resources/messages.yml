@@ -12,3 +12,14 @@ points_gui_head_lore:
   - "<i:false><gray>"
   - "<i:false><gray>Points: {points}"
 reload_success: "<green>Reload successful."
+game_manager_title: "Game Manager"
+game_manager_stop_item_name: "<i:false><red>Stop '<gray>{id}<red>'"
+game_manager_stop_item_lore:
+  - "<i:false><gray>Click to stop the current"
+  - "<i:false><gray>minigame."
+game_manager_minigame_item_name: "<i:false><gray>Select '{id}'"
+game_manager_minigame_item_lore:
+  - "<i:false><gray>Click to select and start"
+  - "<i:false><gray>this minigame."
+game_manager_stop_success: "<green>Stopped current minigame. All players were sent to the hub."
+game_manager_start_success: "<green>Started minigame: {minigame}"

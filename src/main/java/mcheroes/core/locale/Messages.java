@@ -21,6 +21,13 @@ public final class Messages {
     public static final Args2<Integer, OfflinePlayer> POINTS_GUI_HEAD_NAME = (locale, placement, player) -> locale.getArgs("points_gui_head_name", "{placement}", placement, "{player}", player.getName());
     public static final SplitArgs1<Integer> POINTS_GUI_HEAD_LORE = (locale, points) -> locale.getSplitArgs("points_gui_head_lore", "{points}", points);
     public static final Args0 RELOAD_SUCCESS = (locale) -> locale.get("reload_success");
+    public static final Args0 GAME_MANAGER_TITLE = (locale) -> locale.get("game_manager_title");
+    public static final Args1<String> GAME_MANAGER_STOP_ITEM_NAME = (locale, id) -> locale.getArgs("game_manager_stop_item_name", "{id}", id);
+    public static final SplitArgs0 GAME_MANAGER_STOP_ITEM_LORE = (locale) -> locale.getSplit("game_manager_stop_item_lore");
+    public static final Args1<String> GAME_MANAGER_MINIGAME_ITEM_NAME = (locale, id) -> locale.getArgs("game_manager_minigame_item_name", "{id}", id);
+    public static final SplitArgs0 GAME_MANAGER_MINIGAME_ITEM_LORE = (locale) -> locale.getSplit("game_manager_minigame_item_lore");
+    public static final Args0 GAME_MANAGER_STOP_SUCCESS = (locale) -> locale.get("game_manager_stop_success");
+    public static final Args1<String> GAME_MANAGER_START_SUCCESS = (locale, minigame) -> locale.getArgs("game_manager_start_success", "{minigame}", minigame);
 
     public interface Args0 {
         Component build(LocaleAdapter locale);
@@ -36,6 +43,10 @@ public final class Messages {
 
     public interface Args3<A, B, C> {
         Component build(LocaleAdapter locale, A a, B b, C c);
+    }
+
+    public interface SplitArgs0 {
+        List<Component> build(LocaleAdapter locale);
     }
 
     public interface SplitArgs1<A> {
