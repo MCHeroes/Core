@@ -7,7 +7,7 @@ Before using the Core's data/actions API, you will need to reference dependency 
 
 ## How to reference the CorePlugin singleton:
 ```java
-CorePlugin core=CoreProvider.get();
+CorePlugin core = CoreProvider.get();
 ```
 
 ## How to use the actions API to get/set data:
