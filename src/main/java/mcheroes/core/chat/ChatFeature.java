@@ -6,7 +6,7 @@ import mcheroes.core.api.feature.CoreFeature;
 import mcheroes.core.locale.LocaleAdapter;
 import mcheroes.core.locale.Messages;
 import mcheroes.core.teams.Team;
-import mcheroes.core.teams.actions.GetTeamAction;
+import mcheroes.core.teams.utils.TeamUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -37,7 +37,7 @@ public class ChatFeature implements CoreFeature, Listener {
         event.setCancelled(true);
 
         final Component message = event.message();
-        final Team team = actionManager.run(new GetTeamAction(event.getPlayer().getUniqueId()));
+        final Team team = TeamUtil.getTeam(actionManager, event.getPlayer());
 
         Bukkit.broadcast(Messages.CHAT_FORMAT.build(locale, team, event.getPlayer(), message));
     }

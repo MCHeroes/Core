@@ -3,7 +3,7 @@ package mcheroes.core;
 import mcheroes.core.action.ActionManager;
 import mcheroes.core.points.actions.GetPointsAction;
 import mcheroes.core.teams.Team;
-import mcheroes.core.teams.actions.GetTeamAction;
+import mcheroes.core.teams.utils.TeamUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -50,7 +50,7 @@ public class CorePlaceholders extends PlaceholderExpansion {
 
         Team team = null;
         if (params.startsWith("team")) {
-            team = actionManager.run(new GetTeamAction(player.getUniqueId()));
+          team = TeamUtil.getTeam(actionManager, player);
             if (params.startsWith("team_") && team == null) return "";
         }
 
