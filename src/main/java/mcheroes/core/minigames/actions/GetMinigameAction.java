@@ -1,10 +1,11 @@
 package mcheroes.core.minigames.actions;
 
 import mcheroes.core.api.action.Action;
+import mcheroes.core.api.minigame.Minigame;
 
 import java.util.Objects;
 
-public record GetMinigameAction(String id) implements Action {
+public record GetMinigameAction(String id) implements Action<Minigame> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

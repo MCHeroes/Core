@@ -1,5 +1,5 @@
 package mcheroes.core.api.action;
 
-public interface Action {
+public interface Action<T> {
 
 }

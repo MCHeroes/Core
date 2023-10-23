@@ -5,7 +5,7 @@ import mcheroes.core.api.action.Action;
 import java.util.Objects;
 import java.util.UUID;
 
-public record SetPointsAction(UUID player, int to) implements Action {
+public record SetPointsAction(UUID player, int to) implements Action<Integer> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

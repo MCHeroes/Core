@@ -1,11 +1,12 @@
 package mcheroes.core.teams.actions;
 
 import mcheroes.core.api.action.Action;
+import mcheroes.core.teams.Team;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public record GetTeamAction(UUID player) implements Action {
+public record GetTeamAction(UUID player) implements Action<Team> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

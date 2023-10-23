@@ -5,7 +5,7 @@ import mcheroes.core.api.minigame.Minigame;
 
 import java.util.Objects;
 
-public record SetCurrentMinigameAction(Minigame minigame) implements Action {
+public record SetCurrentMinigameAction(Minigame minigame) implements Action<Minigame> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
