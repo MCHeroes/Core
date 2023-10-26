@@ -35,8 +35,8 @@ repositories {
         url = uri("http://gro.broskiclan.org:1234/private")
         allowInsecureProtocol = true
         credentials {
-            username = "byteful"
-            password = "7A70xCvP1gKDCR07u+6jOc82z9COqO26CKqhPM1Xl/F6GF3qz+OlgywfEtjyl9WK"
+            username = "byte"
+            password = "delta"
         }
     }
 }
@@ -105,8 +105,8 @@ publishing {
             url = uri("http://gro.broskiclan.org:1234/private")
             allowInsecureProtocol = true
             credentials {
-                username = "byteful"
-                password = "7A70xCvP1gKDCR07u+6jOc82z9COqO26CKqhPM1Xl/F6GF3qz+OlgywfEtjyl9WK"
+                username = "byte"
+                password = "delta"
             }
         }
     }
