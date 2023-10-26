@@ -2,6 +2,8 @@ plugins {
     id "java"
     id "idea"
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id "maven-publish"
+    id "java-library"
 }
 
 group = "mcheroes"
@@ -29,10 +31,18 @@ repositories {
         name = "placeholderapi"
         url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
+    maven {
+        url = uri("http://gro.broskiclan.org:1234/private")
+        allowInsecureProtocol = true
+        credentials {
+            username = "byteful"
+            password = "7A70xCvP1gKDCR07u+6jOc82z9COqO26CKqhPM1Xl/F6GF3qz+OlgywfEtjyl9WK"
+        }
+    }
 }
 
 dependencies {
-    compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
+    compileOnly "io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT"
 
     implementation "com.github.Revxrsal.Lamp:common:3.1.5"
     implementation "com.github.Revxrsal.Lamp:bukkit:3.1.5"
@@ -75,4 +85,39 @@ compileJava { // Preserve parameter names in the bytecode
 shadowJar {
     archiveBaseName.set("MCHeroes-Core")
     archiveClassifier.set("")
+}
+
+tasks.register('javadocJar', Jar) {
+    from javadoc
+    archiveClassifier.set('javadoc')
+    archiveBaseName.set("MCHeroes-Core")
+}
+
+tasks.register('sourcesJar', Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier.set('sources')
+    archiveBaseName.set("MCHeroes-Core")
+}
+
+publishing {
+    repositories {
+        maven {
+            url = uri("http://gro.broskiclan.org:1234/private")
+            allowInsecureProtocol = true
+            credentials {
+                username = "byteful"
+                password = "7A70xCvP1gKDCR07u+6jOc82z9COqO26CKqhPM1Xl/F6GF3qz+OlgywfEtjyl9WK"
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId = 'mcheroes'
+            artifactId = 'core'
+            version = '1.0.0'
+            artifact javadocJar
+            artifact sourcesJar
+            artifact shadowJar
+        }
+    }
 }
