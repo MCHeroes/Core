@@ -11,6 +11,14 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
@@ -59,6 +67,56 @@ public class HubFeature implements CoreFeature, Listener {
     public void on(PlayerRespawnEvent event) {
         // TODO: disable this event if current minigame overrides respawn mechanics
         event.setRespawnLocation(cachedLocation);
+    }
+
+    @EventHandler
+    public void on(PlayerChangedWorldEvent event) {
+        final Player player = event.getPlayer();
+        if(isInHub(player)) {
+            // Reset some player attributes when they come back to hub
+            player.setFoodLevel(20);
+            player.setHealth(20);
+            player.setFireTicks(0);
+            player.setFreezeTicks(0);
+        }
+    }
+
+    @EventHandler
+    public void on(BlockBreakEvent event) {
+        if(isInHub(event.getPlayer())) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(BlockPlaceEvent event) {
+        if(isInHub(event.getPlayer())) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(EntityDamageByEntityEvent event) {
+        if(event.getDamager() instanceof Player damager && isInHub(damager)) event.setCancelled(true);
+        if(event.getEntity() instanceof Player damagee && isInHub(damagee)) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(EntityDamageEvent event) {
+        if(event.getEntity() instanceof Player damagee && isInHub(damagee)) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(PlayerInteractEvent event) {
+        if(isInHub(event.getPlayer()) && event.getAction() == Action.PHYSICAL) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(FoodLevelChangeEvent event) {
+        if(!(event.getEntity() instanceof Player player)) return;
+        if(!isInHub(player)) return;
+
+        event.setCancelled(true);
+    }
+
+    private boolean isInHub(Player player) {
+        return cachedLocation != null && player.getWorld().getName().equals(cachedLocation.getWorld().getName());
     }
 
     @Command("hub")
