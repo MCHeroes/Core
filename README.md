@@ -27,3 +27,11 @@ Team team = core.getActionManager().run(new GetTeamAction(UUID));
 // or alternatively use the utils for simplifying action API calls
 TeamUtil.getTeam(core.getActionManager(), Player/UUID);
 ```
+## How to register a minigame:
+```java
+    // Make a class implementing Minigame
+    MinigameImpl minigame = ...
+    CorePlugin core = ...
+        
+    core.getActionManager().run(new RegisterMinigameAction(minigame));
+```
