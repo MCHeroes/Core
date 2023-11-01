@@ -72,7 +72,7 @@ public class HubFeature implements CoreFeature, Listener {
     @EventHandler
     public void on(PlayerChangedWorldEvent event) {
         final Player player = event.getPlayer();
-        if(isInHub(player)) {
+        if(player.getWorld().getName().equals(cachedLocation.getWorld().getName())) {
             // Reset some player attributes when they come back to hub
             player.setFoodLevel(20);
             player.setHealth(20);
@@ -83,40 +83,39 @@ public class HubFeature implements CoreFeature, Listener {
 
     @EventHandler
     public void on(BlockBreakEvent event) {
-        if(isInHub(event.getPlayer())) event.setCancelled(true);
+        if(isRestricted(event.getPlayer())) event.setCancelled(true);
     }
 
     @EventHandler
     public void on(BlockPlaceEvent event) {
-        if(isInHub(event.getPlayer())) event.setCancelled(true);
+        if(isRestricted(event.getPlayer())) event.setCancelled(true);
     }
 
     @EventHandler
     public void on(EntityDamageByEntityEvent event) {
-        if(event.getDamager() instanceof Player damager && isInHub(damager)) event.setCancelled(true);
-        if(event.getEntity() instanceof Player damagee && isInHub(damagee)) event.setCancelled(true);
+        if(event.getDamager() instanceof Player damager && isRestricted(damager)) event.setCancelled(true);
+        if(event.getEntity() instanceof Player damagee && isRestricted(damagee)) event.setCancelled(true);
     }
 
     @EventHandler
     public void on(EntityDamageEvent event) {
-        if(event.getEntity() instanceof Player damagee && isInHub(damagee)) event.setCancelled(true);
+        if(event.getEntity() instanceof Player damagee && isRestricted(damagee)) event.setCancelled(true);
     }
 
     @EventHandler
     public void on(PlayerInteractEvent event) {
-        if(isInHub(event.getPlayer()) && event.getAction() == Action.PHYSICAL) event.setCancelled(true);
+        if(isRestricted(event.getPlayer())) event.setCancelled(true);
     }
 
     @EventHandler
     public void on(FoodLevelChangeEvent event) {
         if(!(event.getEntity() instanceof Player player)) return;
-        if(!isInHub(player)) return;
-
-        event.setCancelled(true);
+        
+        if(isRestricted(player)) event.setCancelled(true);
     }
 
-    private boolean isInHub(Player player) {
-        return cachedLocation != null && player.getWorld().getName().equals(cachedLocation.getWorld().getName());
+    private boolean isRestricted(Player player) {
+        return cachedLocation != null && player.getWorld().getName().equals(cachedLocation.getWorld().getName()) && !player.hasPermission(Permissions.ADMIN);
     }
 
     @Command("hub")
