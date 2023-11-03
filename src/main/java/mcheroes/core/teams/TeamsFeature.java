@@ -8,7 +8,6 @@ import mcheroes.core.locale.Messages;
 import mcheroes.core.points.actions.SetPointsAction;
 import mcheroes.core.teams.actions.GetTeamAction;
 import mcheroes.core.utils.Permissions;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -27,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static mcheroes.core.utils.ConfigParser.parseTeam;
 
 @Command("teams")
 public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, Team> {
@@ -87,11 +88,7 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
 
     private void reloadTeams() {
         teams.clear();
-        config.getConfigurationSection("teams").getValues(false).forEach((id, data) -> {
-            final ConfigurationSection cs = (ConfigurationSection) data;
-
-            teams.put(id, new Team(id, cs.getString("name", id), cs.getString("chat_prefix", id), TextColor.fromHexString(cs.getString("color", "000000")), cs.getStringList("members").stream().map(UUID::fromString).collect(Collectors.toSet())));
-        });
+      config.getConfigurationSection("teams").getValues(false).forEach((id, data) -> teams.put(id, parseTeam((ConfigurationSection) data)));
     }
 
     @Override

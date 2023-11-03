@@ -27,7 +27,7 @@ public class GameManagerGUI extends InventoryGUI {
         clear();
         fill(0, 9, InventoryGUI.FILLER);
 
-        if(manager.getCurrentMinigame() != null) {
+      if (manager.getCurrentMinigame() != null) {
             addButton(22, ItemButton.create(ItemStackBuilder
                     .of(Material.RED_WOOL)
                     .name(Messages.GAME_MANAGER_STOP_ITEM_NAME.build(locale, manager.getCurrentMinigame()))
@@ -35,7 +35,7 @@ public class GameManagerGUI extends InventoryGUI {
                     .build(),
                     e -> {
                         final Minigame found = registry.get(manager.getCurrentMinigame());
-                        if(found == null) throw new RuntimeException("Failed to find current/loaded minigame?!");
+                      if (found == null) throw new RuntimeException("Failed to find current/loaded minigame?!");
 
                         found.stop();
                         manager.setCurrentMinigame(null);
@@ -48,7 +48,7 @@ public class GameManagerGUI extends InventoryGUI {
         }
 
         final Collection<Minigame> minigames = registry.getMinigames().values();
-        if(minigames.isEmpty()) return;
+      if (minigames.isEmpty()) return;
 
         for (Minigame minigame : minigames) {
             add(minigame);
