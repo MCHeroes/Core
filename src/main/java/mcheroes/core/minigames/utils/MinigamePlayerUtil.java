@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 public final class MinigamePlayerUtil {
     public static Set<Player> getPlayers(ActionManager actionManager) {
         return Bukkit.getOnlinePlayers()
-            .stream()
-            .filter(player -> TeamUtil.getTeam(actionManager, player) != null)
-            .collect(Collectors.toSet());
+                .stream()
+                .filter(player -> TeamUtil.getTeam(actionManager, player) != null)
+                .collect(Collectors.toSet());
     }
 }

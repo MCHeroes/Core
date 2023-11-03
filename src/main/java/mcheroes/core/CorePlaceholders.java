@@ -50,7 +50,7 @@ public class CorePlaceholders extends PlaceholderExpansion {
 
         Team team = null;
         if (params.startsWith("team")) {
-          team = TeamUtil.getTeam(actionManager, player);
+            team = TeamUtil.getTeam(actionManager, player);
             if (params.startsWith("team_") && team == null) return "";
         }
 

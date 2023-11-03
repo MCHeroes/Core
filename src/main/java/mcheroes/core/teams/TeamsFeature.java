@@ -88,7 +88,7 @@ public class TeamsFeature implements CoreFeature, ActionHandler<GetTeamAction, T
 
     private void reloadTeams() {
         teams.clear();
-      config.getConfigurationSection("teams").getValues(false).forEach((id, data) -> teams.put(id, parseTeam((ConfigurationSection) data)));
+        config.getConfigurationSection("teams").getValues(false).forEach((id, data) -> teams.put(id, parseTeam((ConfigurationSection) data)));
     }
 
     @Override

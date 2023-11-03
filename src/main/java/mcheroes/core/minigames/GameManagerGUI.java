@@ -27,15 +27,15 @@ public class GameManagerGUI extends InventoryGUI {
         clear();
         fill(0, 9, InventoryGUI.FILLER);
 
-      if (manager.getCurrentMinigame() != null) {
+        if (manager.getCurrentMinigame() != null) {
             addButton(22, ItemButton.create(ItemStackBuilder
-                    .of(Material.RED_WOOL)
-                    .name(Messages.GAME_MANAGER_STOP_ITEM_NAME.build(locale, manager.getCurrentMinigame()))
-                    .lore(Messages.GAME_MANAGER_STOP_ITEM_LORE.build(locale))
-                    .build(),
+                            .of(Material.RED_WOOL)
+                            .name(Messages.GAME_MANAGER_STOP_ITEM_NAME.build(locale, manager.getCurrentMinigame()))
+                            .lore(Messages.GAME_MANAGER_STOP_ITEM_LORE.build(locale))
+                            .build(),
                     e -> {
                         final Minigame found = registry.get(manager.getCurrentMinigame());
-                      if (found == null) throw new RuntimeException("Failed to find current/loaded minigame?!");
+                        if (found == null) throw new RuntimeException("Failed to find current/loaded minigame?!");
 
                         found.stop();
                         manager.setCurrentMinigame(null);
@@ -48,7 +48,7 @@ public class GameManagerGUI extends InventoryGUI {
         }
 
         final Collection<Minigame> minigames = registry.getMinigames().values();
-      if (minigames.isEmpty()) return;
+        if (minigames.isEmpty()) return;
 
         for (Minigame minigame : minigames) {
             add(minigame);
@@ -59,10 +59,10 @@ public class GameManagerGUI extends InventoryGUI {
         final int slot = getInventory().firstEmpty();
 
         addButton(slot, ItemButton.create(ItemStackBuilder
-                .of(Material.PAPER)
-                .name(Messages.GAME_MANAGER_MINIGAME_ITEM_NAME.build(locale, minigame.getId()))
-                .lore(Messages.GAME_MANAGER_MINIGAME_ITEM_LORE.build(locale))
-                .build(),
+                        .of(Material.PAPER)
+                        .name(Messages.GAME_MANAGER_MINIGAME_ITEM_NAME.build(locale, minigame.getId()))
+                        .lore(Messages.GAME_MANAGER_MINIGAME_ITEM_LORE.build(locale))
+                        .build(),
                 e -> {
                     minigame.start(); // Ignore 'if can start or not' with this.
                     e.getWhoClicked().sendMessage(Messages.GAME_MANAGER_START_SUCCESS.build(locale, minigame.getId()));

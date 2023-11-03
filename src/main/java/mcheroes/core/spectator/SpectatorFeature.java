@@ -18,42 +18,42 @@ import java.util.Set;
 import java.util.UUID;
 
 public class SpectatorFeature implements CoreFeature, Listener {
-  private final Set<UUID> tracked = new HashSet<>();
-  private final ActionManager actionManager;
+    private final Set<UUID> tracked = new HashSet<>();
+    private final ActionManager actionManager;
 
-  public SpectatorFeature(ActionManager actionManager) {
-    this.actionManager = actionManager;
-  }
-
-  @Override
-  public void load() {
-    actionManager.set(SetSpectatorAction.class, new SetSpectatorActionHandler(tracked, actionManager));
-    actionManager.set(UnsetSpectatorAction.class, new UnsetSpectatorActionHandler(tracked));
-  }
-
-  @Override
-  public void unload() {
-
-  }
-
-  @EventHandler
-  public void on(EntityDamageEvent event) {
-    if (event.getEntity() instanceof Player player && tracked.contains(player.getUniqueId())) {
-      event.setCancelled(true);
+    public SpectatorFeature(ActionManager actionManager) {
+        this.actionManager = actionManager;
     }
-  }
 
-  @EventHandler
-  public void on(EntityDamageByEntityEvent event) {
-    if (event.getDamager() instanceof Player player && tracked.contains(player.getUniqueId())) {
-      event.setCancelled(true);
+    @Override
+    public void load() {
+        actionManager.set(SetSpectatorAction.class, new SetSpectatorActionHandler(tracked, actionManager));
+        actionManager.set(UnsetSpectatorAction.class, new UnsetSpectatorActionHandler(tracked));
     }
-  }
 
-  @EventHandler
-  public void on(EntityTargetEvent event) {
-    if (event.getTarget() instanceof Player player && tracked.contains(player.getUniqueId())) {
-      event.setCancelled(true);
+    @Override
+    public void unload() {
+
     }
-  }
+
+    @EventHandler
+    public void on(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player player && tracked.contains(player.getUniqueId())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void on(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player player && tracked.contains(player.getUniqueId())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void on(EntityTargetEvent event) {
+        if (event.getTarget() instanceof Player player && tracked.contains(player.getUniqueId())) {
+            event.setCancelled(true);
+        }
+    }
 }
