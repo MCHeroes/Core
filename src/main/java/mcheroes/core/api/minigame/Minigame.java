@@ -37,4 +37,13 @@ public interface Minigame {
      * @return true if this game can start
      */
     boolean canStart();
+
+    /**
+     * Returns the time limit of the game in seconds.
+     * This game will auto-end after this time if not already ended.
+     * Use -1 if you want to disable this feature.
+     *
+     * @return number of seconds the game lasts till it is forced to end, -1 if it has no time limit
+     */
+    int getMaxSeconds();
 }
