@@ -29,9 +29,24 @@ TeamUtil.getTeam(core.getActionManager(), Player/UUID);
 ```
 ## How to register a minigame:
 ```java
-    // Make a class implementing Minigame
-    MinigameImpl minigame = ...
-    CorePlugin core = ...
+// Make a class implementing Minigame
+MinigameImpl minigame = ...
+CorePlugin core = ...
         
-    core.getActionManager().run(new RegisterMinigameAction(minigame));
+core.getActionManager().run(new RegisterMinigameAction(minigame));
+```
+## How to get all minigame players:
+```java
+// Make a class implementing Minigame
+CorePlugin core = ...
+        
+MinigamePlayerUtil.getPlayers(core.getActionManager());
+```
+## How to manage spectator status:
+```java
+// Make a class implementing Minigame
+CorePlugin core = ...
+    
+core.getActionManager().run(new SetSpectatorAction(UUID));
+core.getActionManager().run(new UnsetSpectatorAction(UUID));
 ```
