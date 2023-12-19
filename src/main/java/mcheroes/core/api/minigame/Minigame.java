@@ -1,5 +1,8 @@
 package mcheroes.core.api.minigame;
 
+import mcheroes.core.minigames.utils.MinigameIntroducer;
+import org.bukkit.entity.Player;
+
 /**
  * This interface will be implemented by a specific class in every gamemode's plugin
  * which will override these methods to handle start/stop actions whenever the core's
@@ -46,4 +49,8 @@ public interface Minigame {
      * @return number of seconds the game lasts till it is forced to end, -1 if it has no time limit
      */
     int getMaxSeconds();
+
+    void handlePreGame(Player player);
+
+    MinigameIntroducer getIntroducer();
 }

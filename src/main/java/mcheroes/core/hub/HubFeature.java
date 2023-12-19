@@ -77,6 +77,7 @@ public class HubFeature implements CoreFeature, Listener {
             player.setHealth(20);
             player.setFireTicks(0);
             player.setFreezeTicks(0);
+            player.teleport(cachedLocation);
         }
     }
 

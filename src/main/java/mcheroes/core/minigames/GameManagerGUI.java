@@ -1,8 +1,10 @@
 package mcheroes.core.minigames;
 
+import mcheroes.core.CoreProvider;
 import mcheroes.core.api.minigame.Minigame;
 import mcheroes.core.locale.LocaleAdapter;
 import mcheroes.core.locale.Messages;
+import mcheroes.core.minigames.actions.SetCurrentMinigameAction;
 import mcheroes.core.utils.ItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -38,7 +40,7 @@ public class GameManagerGUI extends InventoryGUI {
                         if (found == null) throw new RuntimeException("Failed to find current/loaded minigame?!");
 
                         found.stop();
-                        manager.setCurrentMinigame(null);
+                        CoreProvider.get().getActionManager().run(new SetCurrentMinigameAction(null));
                         e.getWhoClicked().sendMessage(Messages.GAME_MANAGER_STOP_SUCCESS.build(locale));
 
                         build();
@@ -64,7 +66,7 @@ public class GameManagerGUI extends InventoryGUI {
                         .lore(Messages.GAME_MANAGER_MINIGAME_ITEM_LORE.build(locale))
                         .build(),
                 e -> {
-                    minigame.start(); // Ignore 'if can start or not' with this.
+                    CoreProvider.get().getActionManager().run(new SetCurrentMinigameAction(minigame));
                     e.getWhoClicked().sendMessage(Messages.GAME_MANAGER_START_SUCCESS.build(locale, minigame.getId()));
 
                     build();

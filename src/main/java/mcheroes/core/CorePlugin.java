@@ -140,4 +140,8 @@ public final class CorePlugin extends JavaPlugin {
             }
         }
     }
+
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
 }

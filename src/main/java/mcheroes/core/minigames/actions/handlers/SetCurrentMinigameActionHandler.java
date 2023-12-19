@@ -4,6 +4,8 @@ import mcheroes.core.api.action.ActionHandler;
 import mcheroes.core.api.minigame.Minigame;
 import mcheroes.core.minigames.MinigameManager;
 import mcheroes.core.minigames.actions.SetCurrentMinigameAction;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class SetCurrentMinigameActionHandler implements ActionHandler<SetCurrentMinigameAction, Minigame> {
     private final MinigameManager manager;
@@ -14,8 +16,16 @@ public class SetCurrentMinigameActionHandler implements ActionHandler<SetCurrent
 
     @Override
     public Minigame handle(SetCurrentMinigameAction action) {
-        manager.setCurrentMinigame(action.minigame().getId());
+        final Minigame minigame = action.minigame();
+        if (minigame != null) {
+            minigame.getIntroducer().setEndCallback(minigame::start);
+            minigame.getIntroducer().start();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                minigame.handlePreGame(player);
+            }
+        }
+        manager.setCurrentMinigame(minigame == null ? null : minigame.getId());
 
-        return action.minigame();
+        return minigame;
     }
 }
